@@ -1,0 +1,12 @@
+{
+    "name": "user/code-infinity-part2",
+    "require": {
+        "ext-pdo_sqlite": "*"
+    },
+    "authors": [
+        {
+            "name": "AbdulDavids",
+            "email": "abdulbaaridavids04@gmail.com"
+        }
+    ]
+}
