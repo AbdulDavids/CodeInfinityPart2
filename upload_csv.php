@@ -26,24 +26,24 @@
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['csvFile'])) {
     $csvFile = $_FILES['csvFile'];
 
-    // Check if the file is a CSV file
+    //check if CSV file
     $fileType = pathinfo($csvFile['name'], PATHINFO_EXTENSION);
     if (strtolower($fileType) !== 'csv') {
         alert('Only CSV files are allowed.');
     }
 
-    // Process the uploaded CSV file
+
     $csvData = array_map('str_getcsv', file($csvFile['tmp_name']));
-    $headerRow = array_shift($csvData); // Remove and store the header row
-    $rowCount = 0; // Initialize the record count
+    $headerRow = array_shift($csvData); 
+    $rowCount = 0; 
 
     try {
-        // Create a database connection to an SQLite file
+
         $pdo = new PDO('sqlite:mydb.sqlite');
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 
-        // Create the table if it doesn't exist
+        // create the table if it doesn't exist
 $createTableQuery = "
 CREATE TABLE IF NOT EXISTS csv_data (
     Id TEXT,
@@ -68,18 +68,18 @@ $pdo->exec($clearTableQuery);
 
 
 
-        // Insert data into the database
+        // Insert data 
         $query = "INSERT INTO csv_data (Id, Name, Surname, Initials, Age, DateOfBirth) VALUES (?, ?, ?, ?, ?, ?)";
         $statement = $pdo->prepare($query);
 
         foreach ($csvData as $row) {
             list($Id, $name, $surname, $initials, $age, $dateOfBirth) = $row;
 
-            // Convert the date format from 'dd/mm/YYYY' to 'YYYY-MM-DD'
+            
             $dateOfBirth = date('Y-m-d', strtotime($dateOfBirth));
 
             $statement->execute([$Id, $name, $surname, $initials, $age, $dateOfBirth]);
-            $rowCount++; // Increment the record count
+            $rowCount++; 
         }
 
         echo "<p>CSV data successfully imported into the database.<br> Total records added: $rowCount</p>";
